@@ -1,51 +1,42 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 
-public class Graph implements Iterable<Edge>{
+public class Graph{
     // classe de graphe non orientés permettant de manipuler
     // en même temps des arcs (orientés)
     // pour pouvoir stocker un arbre couvrant, en plus du graphe
     
-	int order;
-	int edgeCardinality;
-	
-	ArrayList<LinkedList<Edge>> adjacency;
-	ArrayList<LinkedList<Arc>> inAdjacency;
-	ArrayList<LinkedList<Arc>> outAdjacency;
+	protected int V;
+	protected int E;
+
+	protected ArrayList<LinkedList<Edge>> adjacency;
+	protected ArrayList<LinkedList<Arc>> inAdjacency;
+	protected ArrayList<LinkedList<Arc>> outAdjacency;
 	
 	public boolean isVertex(int index) {
-	    // à remplir
+	    return( index >= 0 && index < V) ? true : false;
 	}
 	
-	public <T> ArrayList<LinkedList<T>> makeList(int size) {
-		ArrayList<LinkedList<T>> res = new ArrayList<>(size);
-		for(int i = 0; i <= size; i++) {
-			res.add(null);			
-		}
-		return res;
+	public Graph(int cardinalVertex) {
+		V = cardinalVertex;
+		E = 0;
+		adjacency = new ArrayList<>();
 	}
-	
-	public Graph(int upperBound) {
-	    // à remplir
-	}
-	
-	public void addVertex(int indexVertex) {
-	    // à remplir
-	}
-	
-	public void ensureVertex(int indexVertex) {
-	    // à remplir
-	}	
 	
 	public void addArc(Arc arc) {
-	    // à remplir
 	}
 	
-	public void addEdge(Edge e) {
-	    // à remplir
+	public void addEdge(int from, int to, int weight) {
+		Edge newEdge = new Edge(from, to, weight);
+		if(!adjacency.get(from).contains(newEdge)) {
+			adjacency.get(from).add(newEdge);
+			E++;
+		}
+	}
+
+	public void removeEdge(Edge e){
+		adjacency.get(e.getSource()).remove(e);
 	}
 	
 }
