@@ -8,10 +8,8 @@ public class Graph{
     // pour pouvoir stocker un arbre couvrant, en plus du graphe
     
 	protected int V; //nbVertex
-
+	protected ArrayList<LinkedList<Integer>> neighbors;
 	protected ArrayList<LinkedList<Edge>> E;
-	protected ArrayList<LinkedList<Arc>> inAdjacency;
-	protected ArrayList<LinkedList<Arc>> outAdjacency;
 	
 	public boolean isVertex(int index) {
 	    return( index >= 0 && index < V) ? true : false;
@@ -28,31 +26,39 @@ public class Graph{
 	public boolean containsEdge(Edge e){
 		return (E.get(e.getSource()).contains(e)) ? true : false;
 	}
-
-	public boolean containsArc(Arc arc){
-		return (inAdjacency.get(arc.getEdge().getSource()).contains(arc)) ? true : false;
-	}
 	
 	public Graph(int cardinalVertex) {
 		V = cardinalVertex;
 		E = new ArrayList<>(cardinalVertex);
-		init_Edges();
+		neighbors = new ArrayList<>(cardinalVertex);
+		init();
 	}
 
-	private void init_Edges(){
+	private void init(){
 		for(int i=0; i<V; i++){
 			E.add(new LinkedList<>());
+			neighbors.add(new LinkedList<>());
 		}
 	}
 	
 	public void addArc(Edge e) {
 		Arc newArc = new Arc(e, true);
 	}
+
+	protected void setNeighbors(int from, int to){
+		if(!neighbors.get(from).contains(to))
+			neighbors.get(from).add(to);
+		if(!neighbors.get(to).contains(from))
+			neighbors.get(to).add(from);
+	}
 	
 	public void addEdge(int from, int to, int weight) {
 		Edge newEdge = new Edge(from, to, weight);
+
 		if(!containsEdge(newEdge)) {
 			E.get(from).add(newEdge);
+			setNeighbors(from, to);
+			setNeighbors(to, from);
 		}
 	}
 

@@ -22,6 +22,8 @@ public class Tree extends Graph {
             if (!lock[from])
                 lock[from] = true;
             lock[to] = true;
+            setNeighbors(from, to);
+            setNeighbors(to, from);
         }
     }
 

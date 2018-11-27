@@ -7,8 +7,12 @@ public class Complete extends Graph{
 
 	private void addAllEdges(int size) {
 		for(int i = 0; i < size; i++)
-			for (int j = i+1; j < size; j++)
-				this.addEdge(i,j,0);
+			for (int j = i+1; j < size; j++) {
+				this.addEdge(i, j, 0);
+				setNeighbors(i, j);
+				setNeighbors(j, i);
+			}
+
 	}
 
 	private boolean isMaxDegree(){
