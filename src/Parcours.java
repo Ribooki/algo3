@@ -35,9 +35,9 @@ public class Parcours {
 	private Parcours(Graph graph) {
 		this.graph = graph;
 		this.frontier = new Stack<>();
-		this.reached = new BitSet(graph.order);
-		this.predecessor = new ArrayList<>(graph.order);
-		for (int i = 0; i < graph.order; i++) {
+		this.reached = new BitSet(graph.getV());
+		this.predecessor = new ArrayList<>(graph.getV());
+		for (int i = 0; i < graph.getV(); i++) {
 			predecessor.add(null);
 		}
 	}

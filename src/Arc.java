@@ -1,11 +1,15 @@
 
 public class Arc {
-	Edge support;
-	boolean reversed;
+	private Edge support;
+	private boolean reversed;
 	
 	public Arc(Edge e, boolean reversed) {
 		this.support = e;
 		this.reversed = reversed;
+	}
+
+	public Edge getEdge(){
+		return support;
 	}
 	
 	public int getSource() {

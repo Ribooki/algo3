@@ -1,20 +1,12 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
 
 public class Labyrinth extends JPanel {
@@ -122,8 +114,8 @@ public class Labyrinth extends JPanel {
 	}
 	
 	private void drawVerticalEdge(Graphics2D g, Edge e) {
-		int source = Math.min(e.source, e.dest);
-		int dest = Math.max(e.source,e.dest);
+		int source = Math.min(e.getSource(), e.getDest());
+		int dest = Math.max(e.getSource(),e.getDest());
 		int xMin = side * grid.abscissaOfVertex(source) + corridorMargin;
 		int yMin = side * grid.ordinateOfVertex(source) + corridorStartShift;
 		Rectangle rect = new Rectangle(xMin,yMin,corridorWidth, 2*halfSide);
@@ -137,8 +129,8 @@ public class Labyrinth extends JPanel {
 	}
 	
 	private void drawHorizontalEdge(Graphics2D g, Edge e) {
-		int source = Math.min(e.source, e.dest);
-		int dest = Math.max(e.source,e.dest);
+		int source = Math.min(e.getSource(), e.getDest());
+		int dest = Math.max(e.getSource(),e.getDest());
 		int xMin = side * grid.abscissaOfVertex(source) + corridorStartShift;
 		int yMin = side * grid.ordinateOfVertex(source) + corridorMargin;
 		Rectangle rect = new Rectangle(xMin, yMin, 2*halfSide, corridorWidth);
@@ -187,7 +179,7 @@ public class Labyrinth extends JPanel {
 			if (grid.isHorizontal(e)) drawHorizontalEdge(g,e);
 			else drawVerticalEdge(g,e);
 		}
-		for (int i = 0; i < grid.graph.order; i++) {
+		for (int i = 0; i < grid.graph.getV(); i++) {
 			drawVertex(g,i);
 		}		
 		if (tree != null) drawRoot(g,tree.getRoot());

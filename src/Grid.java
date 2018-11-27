@@ -29,17 +29,14 @@ public class Grid {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (i < width - 1)
-					graph.addEdge(new Edge(
+					graph.addEdge(
 									vertexOfCoordinate(i,j),
 									vertexOfCoordinate(i+1,j),
-									0.0
-							));
+									0);
 				if (j < height - 1)
-					graph.addEdge(new Edge(
-									vertexOfCoordinate(i,j),
+					graph.addEdge(vertexOfCoordinate(i,j),
 									vertexOfCoordinate(i,j+1),
-									0.0
-						));
+									0);
 			}
 		}
 		
@@ -47,11 +44,11 @@ public class Grid {
 
 	
 	public boolean isHorizontal(Edge e) {
-		return Math.abs(e.source - e.dest) == 1;
+		return Math.abs(e.getSource() - e.getWeight()) == 1;
 	}
 	
 	public boolean isVertical(Edge e) {
-		return Math.abs(e.source - e.dest) == width;
+		return Math.abs(e.getSource() - e.getDest()) == width;
 	}
 	
 	
@@ -79,9 +76,9 @@ public class Grid {
 		for (Edge e : edges) {
 //			System.out.println(e.fromVertex + " -- " + e.toVertex);
 			if (isHorizontal(e))
-				right.set(Math.min(e.source,e.dest));
+				right.set(Math.min(e.getSource(),e.getDest()));
 			if (isVertical(e))
-				up.set(Math.min(e.source,e.dest));
+				up.set(Math.min(e.getSource(),e.getDest()));
 		}
 		
 		for (int j = 0; j < height; j++) {

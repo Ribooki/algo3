@@ -1,28 +1,24 @@
-
 public class Complete extends Graph{
 
 	public Complete(int cardinalVertex) {
 		super(cardinalVertex);
 		addAllEdges(cardinalVertex);
-
 	}
 
-	private void addAllEdges(int order) {
-		for(int i = 0; i < order; i++)
-			for (int j = i+1; j < order; j++)
+	private void addAllEdges(int size) {
+		for(int i = 0; i < size; i++)
+			for (int j = i+1; j < size; j++)
 				this.addEdge(i,j,0);
 	}
 
 	private boolean isMaxDegree(){
-		return (E == (V*(V-1))/2) ? true : false;
+		return (E.size() == (V*(V-1))/2) ? true : false; //Dans un graphe complet E = (n(n-1))/2 n étant le nombres de sommets du graphes
 	}
 
 	@Override
 	public void addEdge(int from, int to, int weight) {
 		if (!isMaxDegree()) {
-			Edge newEdge = new Edge(from, to, weight);
-			adjacency.get(from).add(newEdge);
-			E++;
+			E.get(from).add(new Edge(from, to, weight));
 		}
 	}
 }
