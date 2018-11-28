@@ -9,6 +9,7 @@ public class Graph{
     
 	protected int V; //nbVertex
 	protected ArrayList<LinkedList<Integer>> neighbors;
+	protected int[] degV;
 	protected ArrayList<LinkedList<Edge>> E;
 	
 	public boolean isVertex(int index) {
@@ -26,11 +27,38 @@ public class Graph{
 	public boolean containsEdge(Edge e){
 		return (E.get(e.getSource()).contains(e)) ? true : false;
 	}
+
+	public int degVMax(){
+		int max = 0;
+		for(int i=0; i<degV.length; i++){
+			if (max <= degV[i])
+				max = degV[i];
+		}
+		return max;
+	}
+
+	public void RandomBounds(){
+		for(int i = 0; i<E.size(); i++){
+			for(Edge e : E.get(i))
+				e.setWeight(Math.random());
+		}
+	}
+
+	public ArrayList<Integer> verticesDegMax(){
+		ArrayList<Integer> degVs = new ArrayList<>();
+		int degMax = degVMax();
+		for(int i=0; i<degV.length; i++){
+			if(degV[i] == degMax)
+				degVs.add(degV[i]);
+		}
+		return degVs;
+	}
 	
 	public Graph(int cardinalVertex) {
 		V = cardinalVertex;
 		E = new ArrayList<>(cardinalVertex);
 		neighbors = new ArrayList<>(cardinalVertex);
+		degV = new int[cardinalVertex];
 		init();
 	}
 
@@ -38,11 +66,8 @@ public class Graph{
 		for(int i=0; i<V; i++){
 			E.add(new LinkedList<>());
 			neighbors.add(new LinkedList<>());
+			degV[i] = 0;
 		}
-	}
-	
-	public void addArc(Edge e) {
-		Arc newArc = new Arc(e, true);
 	}
 
 	protected void setNeighbors(int from, int to){
@@ -52,11 +77,12 @@ public class Graph{
 			neighbors.get(to).add(from);
 	}
 	
-	public void addEdge(int from, int to, int weight) {
+	public void addEdge(int from, int to, double weight) {
 		Edge newEdge = new Edge(from, to, weight);
 
 		if(!containsEdge(newEdge)) {
 			E.get(from).add(newEdge);
+			degV[from]++;
 			setNeighbors(from, to);
 			setNeighbors(to, from);
 		}

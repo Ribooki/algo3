@@ -20,7 +20,7 @@ public class Complete extends Graph{
 	}
 
 	@Override
-	public void addEdge(int from, int to, int weight) {
+	public void addEdge(int from, int to, double weight) {
 		if (!isMaxDegree()) {
 			E.get(from).add(new Edge(from, to, weight));
 		}

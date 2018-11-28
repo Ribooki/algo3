@@ -15,7 +15,7 @@ public class Tree extends Graph {
     }
 
     @Override
-    public void addEdge(int from, int to, int weight) {
+    public void addEdge(int from, int to, double weight) {
         Edge newEdge = new Edge(from, to, weight);
         if(!containsEdge(newEdge) && !lock[to]) {
             E.get(from).add(newEdge);

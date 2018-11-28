@@ -2,9 +2,9 @@
 public class Edge implements Comparable<Edge> {
 	private int source;
 	private int dest;
-	private int weight;
+	private double weight;
 	
-	public Edge(int source, int dest, int weight) {
+	public Edge(int source, int dest, double weight) {
 		this.source = source;
 		this.dest = dest;
 		this.weight = weight;
@@ -29,10 +29,10 @@ public class Edge implements Comparable<Edge> {
 		return this.dest;
 	}
 
-	public int getWeight(){
+	public double getWeight(){
 		return this.weight;
 	}
-	public void setWeight(int weight) {
+	public void setWeight(double weight) {
 		this.weight = weight;
 	}
 }
