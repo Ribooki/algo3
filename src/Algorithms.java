@@ -44,7 +44,7 @@ public class Algorithms {
         return spanning;
     }
 
-    public static void Krubal(){
+    public static void Kruskal(){
 
     }
     /**     ALDON-BRODER    **/
