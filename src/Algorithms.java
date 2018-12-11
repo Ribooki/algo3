@@ -85,33 +85,45 @@ public class Algorithms {
         return verticesMaxDeg.get(rand);
     }
 
-    private static void drunkenWalk(Graph g, Tree t, boolean[] visited, int current, int w){
-        int source = current;
-        int dest;
-        while(!isAllvisited(visited)){
-            dest = randomiseInt(g.neighbors.get(source).size());
-            t.addEdge(source, g.neighbors.get(source).get(dest), 0);
-            source = g.neighbors.get(source).get(dest);
-            visited[source] = true;
-            if(source == w)
-                break;
-        }
+    private static void drunkenWalk(Graph g, Tree t, boolean[] visited, ArrayList<Integer> a1, ArrayList<Integer> a2, int u, int w){
     }
 
 
-    public static Tree Wilson(Graph g, int w){
+    public static Tree Wilson(Graph g){
         Tree spanning = new Tree(g.getV());
-        int current;
+        int w,u;
         boolean[] visited = new boolean[spanning.getV()];
+        ArrayList<Integer> verticesInTree = new ArrayList<>(spanning.getV());
+        ArrayList<Integer> verticesNotInTree = new ArrayList<>(g.getV());
         initBoolTab(visited);
 
-        current = currentMaxDeg(g);
-        while(current == w){
-            current = currentMaxDeg(g);
+        w = currentMaxDeg(g);
+        visited[w] = true;
+        verticesInTree.add(w);
+
+        for(int i=0; i<g.getV(); i++){
+            if(i != w){
+                verticesNotInTree.add(i);
+            }
         }
-        visited[current] = true;
-        drunkenWalk(g, spanning, visited, current, w);
+
+        while(!isAllvisited(visited)){
+            u = randVertexNotInTree(verticesNotInTree);
+            drunkenWalk(g, spanning, visited, verticesInTree, verticesNotInTree, u, w);
+            w = randVertexInTree(verticesInTree);
+        }
 
         return spanning;
     }
+
+    private static int randVertexNotInTree(ArrayList<Integer> verticesNotInTree) {
+        int vertex = verticesNotInTree.get(randomiseInt(verticesNotInTree.size()));
+        return vertex;
+    }
+
+    private static int randVertexInTree(ArrayList<Integer> verticesInTree) {
+        int vertex = verticesInTree.get(randomiseInt(verticesInTree.size()));
+        return vertex;
+    }
+
 }
