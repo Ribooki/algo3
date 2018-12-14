@@ -4,7 +4,7 @@ public class Main {
 		Complete test = new Complete(6);
 		test.RandomBounds();
 		Tree Aldou = Algorithms.Aldou_Broder(test);
-		Tree Wilson = Algorithms.Wilson(test);
+		Graph Wilson = Algorithms.Wilson(test);
 		Tree Prim = Algorithms.Prim(test, 0);
 
 		System.out.println("GRAPHE");

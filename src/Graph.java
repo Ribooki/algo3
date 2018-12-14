@@ -88,8 +88,10 @@ public class Graph{
 		}
 	}
 
-	public void removeEdge(Edge e){
-		E.get(e.getSource()).remove(e);
+	public boolean removeEdge(Edge e){
+		neighbors.get(e.getSource()).remove((Integer) e.getDest());
+		neighbors.get(e.getDest()).remove((Integer) e.getSource());
+		return E.get(e.getSource()).remove(e);
 	}
 
 	public void affiche(){

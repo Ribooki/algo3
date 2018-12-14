@@ -8,11 +8,29 @@ public class Algorithms {
         return rand.nextInt(max);
     }
 
+    private static void CycleFinding(Graph g, int source, int old, int[] visited){
+        visited[source]++;
+        if(visited[source] == 2) {
+            Edge e = new Edge(old, source, 0);
+            Edge e2 = new Edge(source, old, 0);
+            if (!g.removeEdge(e)) {
+                g.removeEdge(e2);
+            }
+        }
+        for (int i = 0; i < g.neighbors.get(source).size(); i++) {
+            if (i!=old && visited[i] < 2){
+                CycleFinding(g, i, source, visited);
+            }
+        }
+    }
+
     private static void initBoolTab(boolean[] boolTab){
         for(int i = 0; i < boolTab.length; i++){
             boolTab[i] = false;
         }
     }
+
+
 
     private static void addEdgesTo(PriorityQueue<Edge> PQ, Graph g, int vertex){
         for(Edge e : g.E.get(vertex)){
@@ -44,8 +62,9 @@ public class Algorithms {
         return spanning;
     }
 
-    public static void Kruskal(){
+    public static Graph Kruskal(){
 
+        return null;
     }
     /**     ALDON-BRODER    **/
     private static boolean isAllvisited(boolean[] visited){
@@ -85,35 +104,46 @@ public class Algorithms {
         return verticesMaxDeg.get(rand);
     }
 
-    private static void drunkenWalk(Graph g, Tree t, boolean[] visited, ArrayList<Integer> a1, ArrayList<Integer> a2, int u, int w){
+
+
+    private static void walkOn(Graph g, Graph ways ,int u, boolean[] inTree, ArrayList<Integer> out){
+        int[] visited;
+        int nextIndex, nextV;
+        int start = u;
+        while(!inTree[start]){
+            nextIndex = randomiseInt(g.neighbors.get(start).size());
+            nextV = g.neighbors.get(start).get(nextIndex);
+            inTree[start] = true;
+            ways.addEdge(start, nextV, 0);
+            start= nextV;
+        }
+        visited = new int[ways.getV()];
+        CycleFinding(ways, u, -1, visited);
+
     }
 
+    private static void initArray(ArrayList<Integer> a, int size, int v){
+        for(int i = 0; i<size; i++){
+            if(i != v)
+                a.add(i);
+        }
+    }
 
-    public static Tree Wilson(Graph g){
-        Tree spanning = new Tree(g.getV());
-        int w,u;
-        boolean[] visited = new boolean[spanning.getV()];
-        ArrayList<Integer> verticesInTree = new ArrayList<>(spanning.getV());
+    public static Graph Wilson(Graph g){
+        Graph ways = new Graph(g.getV());
+        boolean[] isOnTree = new boolean[g.getV()];
+        initBoolTab(isOnTree);
+        int v = currentMaxDeg(g), u;
+        isOnTree[v] = true;
         ArrayList<Integer> verticesNotInTree = new ArrayList<>(g.getV());
-        initBoolTab(visited);
+        initArray(verticesNotInTree, g.getV(), v);
 
-        w = currentMaxDeg(g);
-        visited[w] = true;
-        verticesInTree.add(w);
-
-        for(int i=0; i<g.getV(); i++){
-            if(i != w){
-                verticesNotInTree.add(i);
-            }
-        }
-
-        while(!isAllvisited(visited)){
+        while(!isAllvisited(isOnTree)){
             u = randVertexNotInTree(verticesNotInTree);
-            drunkenWalk(g, spanning, visited, verticesInTree, verticesNotInTree, u, w);
-            w = randVertexInTree(verticesInTree);
+            walkOn(g, ways, u, isOnTree, verticesNotInTree);
         }
 
-        return spanning;
+        return ways;
     }
 
     private static int randVertexNotInTree(ArrayList<Integer> verticesNotInTree) {
@@ -121,9 +151,7 @@ public class Algorithms {
         return vertex;
     }
 
-    private static int randVertexInTree(ArrayList<Integer> verticesInTree) {
-        int vertex = verticesInTree.get(randomiseInt(verticesInTree.size()));
-        return vertex;
-    }
+
+
 
 }

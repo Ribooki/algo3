@@ -9,6 +9,10 @@ public class Edge implements Comparable<Edge> {
 		this.dest = dest;
 		this.weight = weight;
 	}
+	public Edge(int source, int dest){
+		this.source = source;
+		this.dest = dest;
+	}
 
 	@Override
 	public int compareTo(Edge e) {
