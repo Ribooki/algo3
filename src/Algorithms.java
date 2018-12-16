@@ -8,20 +8,19 @@ public class Algorithms {
         return rand.nextInt(max);
     }
 
-    private static void CycleFinding(Graph g, int source, int old, int[] visited){
-        visited[source]++;
-        if(visited[source] == 2) {
-            Edge e = new Edge(old, source, 0);
-            Edge e2 = new Edge(source, old, 0);
-            if (!g.removeEdge(e)) {
-                g.removeEdge(e2);
+    private static boolean CycleFinding(Graph g, int source, int current, int old, boolean[] visited){
+        visited[current] = true;
+        for (int i=0; i<g.neighbors.get(current).size(); i++){
+            if (g.neighbors.get(current).get(i)!= old && g.neighbors.get(current).get(i) == source){
+                    return true;
+            }
+            else if (g.neighbors.get(current).get(i) != old && !visited[g.neighbors.get(current).get(i)]) {
+                old = current;
+                current = g.neighbors.get(current).get(i);
+                CycleFinding(g, source, current, old, visited);
             }
         }
-        for (int i = 0; i < g.neighbors.get(source).size(); i++) {
-            if (i!=old && visited[i] < 2){
-                CycleFinding(g, i, source, visited);
-            }
-        }
+        return false;
     }
 
     private static void initBoolTab(boolean[] boolTab){
@@ -62,9 +61,22 @@ public class Algorithms {
         return spanning;
     }
 
-    public static Graph Kruskal(){
-
-        return null;
+    public static Graph Kruskal(Graph g){
+        Graph spanning = new Tree(g.getV());
+        Edge e;
+        PriorityQueue<Edge> PQ = new PriorityQueue<>(2*g.getV(), new boundsComparator());
+        for (int i = 0; i<g.E.size(); i++){
+            for (Edge a : g.E.get(i)){
+                PQ.add(a);
+            }
+        }
+        while(PQ.size() != 0){
+            e = PQ.poll();
+            spanning.addEdge(e.getSource(), e.getDest(), e.getWeight());
+            if (CycleFinding(spanning, e.getSource(), e.getSource(), -1, new boolean[spanning.getV()]))
+                spanning.removeEdge(e);
+        }
+        return spanning;
     }
     /**     ALDON-BRODER    **/
     private static boolean isAllvisited(boolean[] visited){
@@ -106,20 +118,33 @@ public class Algorithms {
 
 
 
-    private static void walkOn(Graph g, Graph ways ,int u, boolean[] inTree, ArrayList<Integer> out){
-        int[] visited;
-        int nextIndex, nextV;
+    private static void walkOn(Graph g, Tree wilson ,int u, boolean[] inTree, ArrayList<Integer> out){
+        Tree ways = new Tree(g.getV());
+        int nextIndex, nextV, old = -1;
         int start = u;
         while(!inTree[start]){
             nextIndex = randomiseInt(g.neighbors.get(start).size());
+            while(g.neighbors.get(start).size() >1 && g.neighbors.get(start).get(nextIndex) == old )
+                nextIndex = randomiseInt(g.neighbors.get(start).size());
             nextV = g.neighbors.get(start).get(nextIndex);
-            inTree[start] = true;
             ways.addEdge(start, nextV, 0);
+            old = start;
             start= nextV;
         }
-        visited = new int[ways.getV()];
-        CycleFinding(ways, u, -1, visited);
-
+        for (int i = 0; i < ways.E.size(); i++) {
+            for (Edge e : ways.E.get(i)){
+                inTree[e.getSource()] = true;
+                out.remove((Integer) e.getSource());
+                if (!wilson.isLock(e.getSource()) && !wilson.isLock(e.getDest()) || wilson.isLock(e.getSource()) && !wilson.isLock(e.getDest()))
+                    wilson.addEdge(e.getSource(), e.getDest(), 0);
+                else if(!wilson.isLock(e.getSource()) && wilson.isLock(e.getDest()))
+                    wilson.addEdge(e.getDest(), e.getSource(), 0);
+                else if (wilson.isLock(e.getSource()) && wilson.isLock(e.getDest())) {
+                    wilson.unLock(e.getDest());
+                    wilson.addEdge(e.getSource(), e.getDest(), 0);
+                }
+            }
+        }
     }
 
     private static void initArray(ArrayList<Integer> a, int size, int v){
@@ -129,8 +154,8 @@ public class Algorithms {
         }
     }
 
-    public static Graph Wilson(Graph g){
-        Graph ways = new Graph(g.getV());
+    public static Tree Wilson(Graph g){
+        Tree wilson = new Tree(g.getV());
         boolean[] isOnTree = new boolean[g.getV()];
         initBoolTab(isOnTree);
         int v = currentMaxDeg(g), u;
@@ -140,10 +165,10 @@ public class Algorithms {
 
         while(!isAllvisited(isOnTree)){
             u = randVertexNotInTree(verticesNotInTree);
-            walkOn(g, ways, u, isOnTree, verticesNotInTree);
+            walkOn(g, wilson, u, isOnTree, verticesNotInTree);
         }
 
-        return ways;
+        return wilson;
     }
 
     private static int randVertexNotInTree(ArrayList<Integer> verticesNotInTree) {

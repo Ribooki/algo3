@@ -27,7 +27,13 @@ public class Tree extends Graph {
         }
     }
 
-    public boolean isSpanningTree(){
+    public void unLock(int vertex){
+        lock[vertex] = false;
+    }
+
+    public boolean isLock(int vertex){
+        if (lock[vertex])
+            return true;
         return false;
     }
 }

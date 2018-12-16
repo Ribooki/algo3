@@ -1,0 +1,64 @@
+ _______________________________________________________
+|TP3 : Algorithmique                                    |
+|-------------------------------------------------------|
+|Réalisé en binome par : ALLEMAN Romain & MUNOZ Elias   |
+|_______________________________________________________|
+
+ ____________________    ______________________________________________________
+| Algorithme réalisé |  |               Compilation et Affichage               |
+|--------------------|  |------------------------------------------------------|
+|    Aldou-Broder    |  |              Le programme est compilable             |
+|       Wilson       |  |                                                      |
+|        Prim        |  |   Si vous voulez afficher les arêtes et leur poids   |
+|       Kruskal      |  |  enlevez les "/*" ""*/" des codes mis en commentaire |
+|____________________|  |______________________________________________________|
+
+ ________________________________________________________________________________
+|                               Méthodes utilisées                               |
+|--------------------------------------------------------------------------------|
+|   Pour les algotihmes de Prim/Wilson/Aldou-Broder je n'ai pas utilisé de       |
+|   detection de cycles.                                                         |
+|   En effet la meilleur complexité que j'ai trouvé pour un tel algorithme et de |
+|   O(n).                                                                        |
+|   Or avec mon implementation d'un arbre, cela se fait en temps constant.       |
+|   Mon arbre possède un systeme de Lock. C'est à dire que à la création d'un    |
+|   edge, L'arbre va verifié que le sommet adjacent n'est pas lock pour autoriser|
+|   l'ajout de l'edge (On peut acceder aux sommets locked, seule la creation     |
+|   d'edges est bloqué.                                                          |
+|   Cette méthode empèche la creation d'un cycle et fonctionne pour les algo de  |
+|   Prim et Aldou-Broder car l'on commence par un sommet racine et on construit  |
+|   l'arbre a partir de celui-ci.                                                |
+|                                                                                |
+|   Cependant pour Wilson c'est différent il y a des conditions a respecter.     |
+|   A chaque étape de l'algorithme et tant que tous les sommets ne sont pas dans |
+|   l'arbre, on va generer un chemin allant d'un sommet hors de l'arbre vers     |
+|   un sommet dans l'arbre. Ce chemin etant généré par la classe arbre, il ne    |
+|   possèdera pas de cycles.                                                     |
+|   Le problème vient a la genération des chemins suivant. Ces chemins sont,     |
+|   étape par étape, ajouter a un arbre (graphe final).                          |
+|   Cependant les sommets de cet arbre seront verrouillé, et nous voulons lui    |
+|   ajouter un autre chemins (qui est aussi un arbre).                           |
+|   Il va donc falloir jouer sur les verrous, On a donc :                        |
+|                                                                                |
+|   1). Si deux sommets sont verrouillé a la création d'un edge                  |
+|   (deux arbres qui fusionnes) on deverrouille le sommet de destination pour    |
+|   autoriser l'ajout.                                                           |
+|   2). Si le sommet de destination et verrouiller, on le deverrouille           |
+|   3). Si on ne passe pas par 1) et 2) cela signifie que, soit les deux sommets |
+|   sont déjà deverrouillé, soit le sommet de destination et deja deverrouillé,  |
+|   et donc on fait un ajout normal.                                             |
+|                                                                                |
+|   Cette méthode ne créer pas de cycle car ce sont des arbres sans cycles qui   |
+|   s'ajoute les un aux autres.                                                  |
+|________________________________________________________________________________|
+
+
+ ________________________________________________________________________________
+|                                   WILSON                                       |
+|--------------------------------------------------------------------------------|
+|   L'implémentation de notre arbre ne fonctionne pas dans le cas de wilson car  |
+|   on ne creer pas un arbre de façon classique, on ajoute des edges les un après|
+|   les autres en fonctions de leurs poids.                                      |
+|                                                                                |
+|   Pour celui de WILSON on a donc utilisé un algorithme de detection de cycles. |
+|________________________________________________________________________________|
